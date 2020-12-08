@@ -1,6 +1,5 @@
 from enum import Enum
 
-
 MAX_COLORS = 15
 
 

@@ -1,9 +1,10 @@
 import sys
+
 from PyQt5.QtWidgets import QApplication
 
-from app.gui.windows import MainWindow
+from app.gui.main_windows import MainWindow
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     try:
         app = QApplication(sys.argv)
         window = MainWindow()

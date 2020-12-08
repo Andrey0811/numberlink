@@ -1,4 +1,4 @@
-from app.numberlink import TriangleLink
+from app.core.triangle_field import TriangleLink
 from graph_tools import Graph
 import unittest
 

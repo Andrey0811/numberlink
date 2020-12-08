@@ -11,7 +11,7 @@ def get_field_from_file(filename: str) -> List[List]:
         while i != '':
             temp = []
             for j in i:
-                if i in SEPARATORS:
+                if j in SEPARATORS:
                     continue
                 else:
                     temp.append(int(j))

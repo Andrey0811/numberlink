@@ -1,5 +1,5 @@
 import unittest
-from app.numberlink import TriangleLink, TriangleField
+from app.core.triangle_field import TriangleLink, TriangleField
 from graph_tools import Graph
 
 

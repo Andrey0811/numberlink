@@ -1,14 +1,10 @@
 import random
 from typing import List, Tuple
 
-from app.const import DEFAULT_FIELD_HEIGHT, COUNT_NEIGHBORS
-from app.numberlink import TriangleField, MAX_NUMBER, CELL_EMPTY_VALUE
-
-
-class Path:
-    def __init__(self, start: tuple = None, end: tuple = None):
-        self.start = start
-        self.end = end
+from app.const import COUNT_NEIGHBORS
+from app.core import generator
+from app.core.structures import Path
+from app.core.triangle_field import TriangleField, MAX_NUMBER, CELL_EMPTY_VALUE
 
 
 class CreatorPath:
@@ -23,13 +19,13 @@ class CreatorPath:
         return len(self.paths) + 1
 
     def count_busy_neighbours(self, pos: tuple) -> int:
-        return count(point for point in self.field.get_environment(*pos)
-                     if not self.field.is_valid(*point)
-                     or self.field[point] != CELL_EMPTY_VALUE)
+        return self.count(point for point in self.field.get_environment(*pos)
+                          if not self.field.is_valid(*point)
+                          or self.field[point] != CELL_EMPTY_VALUE)
 
     def count_number_neighbours(self, pos: tuple, number: int) -> int:
-        return count(point for point in self.field.get_neighbours(*pos)
-                     if self.field[point] == number)
+        return self.count(point for point in self.field.get_neighbours(*pos)
+                          if self.field[point] == number)
 
     def is_cycle(self, pos, number) -> bool:
         return self.count_number_neighbours(pos, number) > 1
@@ -64,7 +60,7 @@ class CreatorPath:
                     return pos
 
     def try_get_path_begin(self) -> Tuple[tuple, tuple]:
-        empty_cells = get_empty_cells(self.field)
+        empty_cells = self.get_empty_cells(self.field)
 
         if empty_cells:
             idx = random.randint(0, len(empty_cells) - 1)
@@ -93,7 +89,7 @@ class CreatorPath:
                 return
 
     def get_gaming_field(self) -> List[List]:
-        field = generate_triangle_field(self.field.size)
+        field = generator.generate_triangle_field(self.field.size)
         for i, path in enumerate(self.paths):
             for row, col in [path.start, path.end]:
                 field[row][col] = i + 1
@@ -110,7 +106,7 @@ class CreatorPath:
                   and self.number <= MAX_NUMBER):
                 return self.get_gaming_field()
             else:
-                field = generate_triangle_field(self.field.size)
+                field = generator.generate_triangle_field(self.field.size)
                 self.__init__(TriangleField(field))
 
     @staticmethod
@@ -121,32 +117,16 @@ class CreatorPath:
 
         return count_cells
 
+    @staticmethod
+    def count(iterable) -> int:
+        return sum(1 for _ in iterable)
 
-def count(iterable) -> int:
-    return sum(1 for _ in iterable)
+    @staticmethod
+    def get_empty_cells(field: TriangleField) -> List[tuple]:
+        result = []
+        for i, row in enumerate(field.field):
+            for j, cell in enumerate(row):
+                if cell == CELL_EMPTY_VALUE:
+                    result.append((i, j))
 
-
-def get_empty_cells(field: TriangleField) -> List[tuple]:
-    result = []
-    for i, row in enumerate(field.field):
-        for j, cell in enumerate(row):
-            if cell == CELL_EMPTY_VALUE:
-                result.append((i, j))
-
-    return result
-
-
-def generate_triangle_field(size: int) -> List[List]:
-    field = [[0]]
-    for i in range(1, size):
-        field.append([0 for _ in range(i * 2 + 1)])
-
-    return field
-
-
-def generate_field(size: int = 3):
-    size = max(DEFAULT_FIELD_HEIGHT, size)
-    field = generate_triangle_field(size)
-    constructor = CreatorPath(TriangleField(field))
-
-    return constructor.create()
+        return result

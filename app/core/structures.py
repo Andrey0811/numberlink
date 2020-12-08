@@ -1,6 +1,12 @@
 from typing import List, Dict
 
 
+class Path:
+    def __init__(self, start: tuple = None, end: tuple = None):
+        self.start = start
+        self.end = end
+
+
 class Segment:
     def __init__(self, iterable: list):
         self.active = set(iterable)

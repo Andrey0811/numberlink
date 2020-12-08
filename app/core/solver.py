@@ -1,9 +1,9 @@
 import itertools
 from typing import List, Set, Dict
 
-from app.algorithms.generator import generate_triangle_field
-from app.algorithms.structures import Node, Segment
-from app.numberlink import TriangleLink, TriangleField
+from app.core import generator
+from app.core.structures import Node, Segment
+from app.core.triangle_field import TriangleField
 
 
 def get_right_path(edge, paths):
@@ -14,9 +14,9 @@ def get_right_path(edge, paths):
     return None
 
 
-def get_field_from_solution(field: TriangleLink,
+def get_field_from_solution(field: TriangleField,
                             solution: List[List]) -> List[List]:
-    result = TriangleField(generate_triangle_field(field.size))
+    result = TriangleField(generator.generate_triangle_field(field.size))
     for pair in field.get_targets()['pairs']:
         start, end = tuple(pair)
         number = field[start]
@@ -47,7 +47,7 @@ def get_path(path: List[List[tuple]], node: Node):
     return path if node.name == 0 else path + [node.edge]
 
 
-def solve(instance: TriangleLink):
+def solve(instance: TriangleField):
     graph = instance.make_graph()
     targets = instance.get_targets()
     vertices = Segment(graph.vertices())
