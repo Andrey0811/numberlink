@@ -24,67 +24,69 @@ class CreatorPath:
 
     def count_busy_neighbours(self, pos: tuple) -> int:
         return count(point for point in self.field.get_environment(*pos)
-            if not self.field.is_valid(*point)
-            or self.field[point] != CELL_EMPTY_VALUE)
+                     if not self.field.is_valid(*point)
+                     or self.field[point] != CELL_EMPTY_VALUE)
 
-    def count_numbered_neighbours(self, pos: tuple, number: int) -> int:
+    def count_number_neighbours(self, pos: tuple, number: int) -> int:
         return count(point for point in self.field.get_neighbours(*pos)
-            if self.field[point] == number)
+                     if self.field[point] == number)
 
     def is_cycle(self, pos, number) -> bool:
-        return self.count_numbered_neighbours(pos, number) > 1
+        return self.count_number_neighbours(pos, number) > 1
 
     def is_isolated(self, pos: tuple, number: int, is_last: bool) -> bool:
         return (self.count_busy_neighbours(pos) == COUNT_NEIGHBORS
                 and (not is_last or self.is_cycle(pos, number)))
 
-    def has_isolated_empty_cells(self, pos: tuple, number: int, is_last: bool) -> bool:
+    def has_isolated_empty_cells(self, pos: tuple,
+                                 number: int,
+                                 is_last: bool) -> bool:
         neighbours = self.field.get_neighbours(*pos)
         return any(
             self.is_isolated(place, number, is_last) for place in neighbours
-            if self.field[place] == CELL_EMPTY_VALUE
-        )
+            if self.field[place] == CELL_EMPTY_VALUE)
 
     def can_add_cell(self, pos: tuple, number: int) -> bool:
         self.field[pos] = number
         isolated = self.has_isolated_empty_cells(pos, number, True)
         self.field[pos] = CELL_EMPTY_VALUE
+
         return not isolated
 
-    def get_path_extension_neighbour(self, pos: tuple, number: int) -> tuple:
+    def get_path_extens_neighbours(self, pos: tuple, number: int) -> tuple:
         neighbours = list(self.field.get_neighbours(*pos))
-        start = random.randint(0, len(neighbours) - 1)
+        idx = random.randint(0, len(neighbours) - 1)
 
         if not self.has_isolated_empty_cells(pos, number, False):
-            for pos in neighbours[start:] + neighbours[:start]:
-                if self.field[pos] == CELL_EMPTY_VALUE:
-                    if self.can_add_cell(pos, number):
-                        return pos
-        return None
+            for pos in neighbours[idx:] + neighbours[:idx]:
+                if (self.field[pos] == CELL_EMPTY_VALUE
+                        and self.can_add_cell(pos, number)):
+                    return pos
 
     def try_get_path_begin(self) -> Tuple[tuple, tuple]:
-        empty_cells = list(get_empty_cells(self.field))
+        empty_cells = get_empty_cells(self.field)
+
         if empty_cells:
-            start_idx = random.randint(0, len(empty_cells) - 1)
-            for start in empty_cells[start_idx:] + empty_cells[:start_idx]:
+            idx = random.randint(0, len(empty_cells) - 1)
+            for start in empty_cells[idx:] + empty_cells[:idx]:
                 if self.can_add_cell(start, self.number):
-                    end = self.get_path_extension_neighbour(start, self.number)
+                    end = self.get_path_extens_neighbours(start, self.number)
+
                     if end is not None:
                         return start, end
-        return None
 
     def add_path(self, start: tuple, end: tuple):
-        number = self.number
         self.paths.append(Path(start))
-        self.field[start] = self.field[end] = number
+        self.field[start] = self.field[end] = self.number
         self.covered_cells += 2
 
         while True:
             start = end
-            end = self.get_path_extension_neighbour(start, number)
+            end = self.get_path_extens_neighbours(start, self.number)
 
-            if end is not None and self.covered_cells < self.cells_amount:
-                self.field[end] = number
+            if (end is not None
+                    and self.covered_cells < self.cells_amount):
+                self.field[end] = self.number
                 self.covered_cells += 1
             else:
                 self.paths[-1].end = start
@@ -104,13 +106,12 @@ class CreatorPath:
 
             if pair is not None:
                 self.add_path(*pair)
+            elif (self.covered_cells >= self.cells_amount
+                  and self.number <= MAX_NUMBER):
+                return self.get_gaming_field()
             else:
-                if (self.covered_cells >= self.cells_amount
-                        and self.number <= MAX_NUMBER):
-                    return self.get_gaming_field()
-                else:
-                    field = generate_triangle_field(self.field.size)
-                    self.__init__(TriangleField(field))
+                field = generate_triangle_field(self.field.size)
+                self.__init__(TriangleField(field))
 
     @staticmethod
     def count_cells(size: int) -> int:
@@ -125,12 +126,14 @@ def count(iterable) -> int:
     return sum(1 for _ in iterable)
 
 
-def get_empty_cells(field: TriangleField):
-    temp = []
-    for i, level in enumerate(field.field):
-        for j, cell in enumerate(level):
+def get_empty_cells(field: TriangleField) -> List[tuple]:
+    result = []
+    for i, row in enumerate(field.field):
+        for j, cell in enumerate(row):
             if cell == CELL_EMPTY_VALUE:
-                yield i, j
+                result.append((i, j))
+
+    return result
 
 
 def generate_triangle_field(size: int) -> List[List]:

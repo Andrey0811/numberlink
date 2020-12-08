@@ -4,16 +4,16 @@ from typing import List, Dict
 class Segment:
     def __init__(self, iterable: list):
         self.active = set(iterable)
-        self.thrown = set()
+        self.passive = set()
 
-    def throw(self, item):
+    def leave(self, item):
         self.active.remove(item)
-        self.thrown.add(item)
+        self.passive.add(item)
 
 
 class Node:
-    link_zero = None
-    link_one = None
+    first_second = None
+    second_link = None
 
     def __init__(self, edge: List[tuple],
                  neighbors: Dict[tuple, tuple],
@@ -21,17 +21,17 @@ class Node:
         self.edge = edge
         self.neighbor = neighbors
         self.name = name
-        self.zero_child = None
-        self.one_child = None
+        self.first = None
+        self.second = None
 
-    def add_children(self, zero_child, one_child):
-        self.zero_child = zero_child
-        self.one_child = one_child
+    def add_link(self, first_link, second_link):
+        self.first = first_link
+        self.second = second_link
 
     @property
-    def children(self):
-        return self.zero_child, self.one_child
+    def links(self):
+        return self.first, self.second
 
 
-Node.link_one = Node(None, None, 1)
-Node.link_zero = Node(None, None, 0)
+Node.second_link = Node(None, None, 1)
+Node.first_second = Node(None, None, 0)

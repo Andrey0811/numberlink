@@ -23,17 +23,17 @@ class Menu(QWidget):
         self.init_ui()
 
     def init_ui(self):
-        load_game_button = QPushButton('Загрузить игру', self)
-        load_game_button.clicked.connect(self.window().load_game_from_file)
+        load_game_btn = QPushButton('Загрузить игру', self)
+        load_game_btn.clicked.connect(self.window().load_game_from_file)
 
-        exit_button = QPushButton('Выход', self)
-        exit_button.clicked.connect(self.window().exit)
+        exit_btn = QPushButton('Выход', self)
+        exit_btn.clicked.connect(self.window().exit)
 
         size_label = QLabel('Размер доски', self)
         self.size_editor = QLineEdit(str(DEFAULT_FIELD_HEIGHT), self)
 
-        generate_button = QPushButton('Сгенерировать уровень', self)
-        generate_button.clicked.connect(self.window().generate_level)
+        generate_btn = QPushButton('Сгенерировать уровень', self)
+        generate_btn.clicked.connect(self.window().generate_level)
 
         vbox = QVBoxLayout(self)
         vbox.setAlignment(Qt.AlignCenter)
@@ -44,11 +44,11 @@ class Menu(QWidget):
                 self.window().load_game_from_save)
             vbox.addWidget(continue_game_button, 0, Qt.AlignCenter)
 
-        vbox.addWidget(load_game_button, 0, Qt.AlignCenter)
+        vbox.addWidget(load_game_btn, 0, Qt.AlignCenter)
         vbox.addWidget(size_label, 0, Qt.AlignCenter)
         vbox.addWidget(self.size_editor, 0, Qt.AlignCenter)
-        vbox.addWidget(generate_button, 0, Qt.AlignCenter)
-        vbox.addWidget(exit_button, 0, Qt.AlignCenter)
+        vbox.addWidget(generate_btn, 0, Qt.AlignCenter)
+        vbox.addWidget(exit_btn, 0, Qt.AlignCenter)
 
 
 class GameWindow(QWidget):
@@ -58,29 +58,29 @@ class GameWindow(QWidget):
         self.init_ui()
 
     def init_ui(self):
-        solve_button = QPushButton('Решение', self)
-        solve_button.clicked.connect(self.solve)
+        solve_btn = QPushButton('Решение', self)
+        solve_btn.clicked.connect(self.solve)
 
-        menu_button = QPushButton('Меню', self)
-        menu_button.clicked.connect(self.window().menu)
+        menu_btn = QPushButton('Меню', self)
+        menu_btn.clicked.connect(self.window().menu)
 
-        clear_button = QPushButton('Очистить', self)
-        clear_button.clicked.connect(self.clear)
+        clear_btn = QPushButton('Очистить', self)
+        clear_btn.clicked.connect(self.clear)
 
         self.number_label = QLabel(f'Текущее число: '
                                    f'{str(self.board.current_number)}', self)
         self.number_editor = QLineEdit(str(self.board.current_number), self)
-        number_button = QPushButton('Ввод', self)
-        number_button.clicked.connect(self.window().click_number_change)
+        number_btn = QPushButton('Ввод', self)
+        number_btn.clicked.connect(self.window().click_number_change)
 
         hbox = QHBoxLayout()
         hbox.setAlignment(Qt.AlignCenter)
-        hbox.addWidget(solve_button, 0, Qt.AlignCenter)
-        hbox.addWidget(clear_button, 0, Qt.AlignCenter)
-        hbox.addWidget(menu_button, 0, Qt.AlignCenter)
+        hbox.addWidget(solve_btn, 0, Qt.AlignCenter)
+        hbox.addWidget(clear_btn, 0, Qt.AlignCenter)
+        hbox.addWidget(menu_btn, 0, Qt.AlignCenter)
         hbox.addWidget(self.number_label, 1, Qt.AlignCenter)
         hbox.addWidget(self.number_editor, 2, Qt.AlignCenter)
-        hbox.addWidget(number_button, 2, Qt.AlignCenter)
+        hbox.addWidget(number_btn, 2, Qt.AlignCenter)
 
         vbox = QVBoxLayout(self)
         vbox.setAlignment(Qt.AlignCenter)
@@ -92,22 +92,22 @@ class GameWindow(QWidget):
     def show_finish_dialog(self):
         msb = QDialog(self)
         msb.resize(100, 100)
-        msb.setWindowTitle('Поздравляем!')
+        msb.setWindowTitle(TITLE)
         msb.show()
 
         text = QLabel()
         text.setText('Вы решили задачу')
 
-        return_button = QPushButton('Вернуться', msb)
-        return_button.clicked.connect(msb.close)
+        return_btn = QPushButton('Вернуться', msb)
+        return_btn.clicked.connect(msb.close)
 
-        menu_button = QPushButton('Меню', msb)
-        menu_button.clicked.connect(self.window().menu)
-        menu_button.clicked.connect(msb.close)
+        menu_btn = QPushButton('Меню', msb)
+        menu_btn.clicked.connect(self.window().menu)
+        menu_btn.clicked.connect(msb.close)
 
         hbox = QHBoxLayout(self)
-        hbox.addWidget(return_button, 0, Qt.AlignCenter)
-        hbox.addWidget(menu_button, 0, Qt.AlignCenter)
+        hbox.addWidget(return_btn, 0, Qt.AlignCenter)
+        hbox.addWidget(menu_btn, 0, Qt.AlignCenter)
 
         vbox = QVBoxLayout(msb)
         vbox.addWidget(text, 0, Qt.AlignCenter)
@@ -118,13 +118,13 @@ class GameWindow(QWidget):
             self.show_no_solutions()
         else:
             index = random.randint(0, len(self.board.solutions) - 1)
-            self.board.set_field(self.board.solutions[index]._field)
+            self.board.set_field(self.board.solutions[index].field)
 
     def show_no_solutions(self):
         msg = QMessageBox()
-        msg.setWindowTitle("Упс...")
+        msg.setWindowTitle(TITLE)
         msg.setIcon(QMessageBox.Information)
-        msg.setText("К сожалению, решений нет")
+        msg.setText('К сожалению, решений нет')
         msg.show()
 
     def clear(self):
@@ -195,7 +195,8 @@ class MainWindow(QMainWindow):
         text = self.game.number_editor.text()
         try:
             self.game.board.current_number = int(text)
-            self.game.number_editor.setText(str(self.game.board.current_number))
+            self.game.number_editor.setText(str(
+                self.game.board.current_number))
             self.set_text_label(self.game.number_label,
                                 f'Текущее число: '
                                 f'{str(self.game.board.current_number)}')

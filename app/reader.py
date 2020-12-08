@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import List
 
-from app.const import NAME_SAVE_FILE
+from app.const import NAME_SAVE_FILE, SEPARATORS
 
 
 def get_field_from_file(filename: str) -> List[List]:
@@ -11,7 +11,7 @@ def get_field_from_file(filename: str) -> List[List]:
         while i != '':
             temp = []
             for j in i:
-                if j == '.' or j == ' ' or j == '\n':
+                if i in SEPARATORS:
                     continue
                 else:
                     temp.append(int(j))

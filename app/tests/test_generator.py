@@ -27,7 +27,7 @@ class PathConstructorTest(unittest.TestCase):
 
     def test_count_numbered_neighbours_when_all_empty(self):
         expected = 0
-        actual = self.constructor.count_numbered_neighbours((0, 0), 1)
+        actual = self.constructor.count_number_neighbours((0, 0), 1)
         self.assertEqual(expected, actual)
 
     def test_count_numbered_neighbours_when_not_same_number(self):
@@ -42,7 +42,7 @@ class PathConstructorTest(unittest.TestCase):
 
     def assert_count_numbered_neighbours(self, expected, position, number):
         constructor = PathConstructor(self.field)
-        actual = constructor.count_numbered_neighbours(position, number)
+        actual = constructor.count_number_neighbours(position, number)
         self.assertEqual(expected, actual)
 
     def test_isolated_False(self):

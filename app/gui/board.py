@@ -2,7 +2,7 @@ import functools
 from PyQt5.QtWidgets import QPushButton, QWidget, QVBoxLayout, QHBoxLayout
 from PyQt5.QtCore import Qt
 
-from app.algorithms.solver import make_field_from_solution, solve
+from app.algorithms.solver import get_field_from_solution, solve
 from app.colors import MAX_COLORS, Color
 from app.numberlink import TriangleField, TriangleLink
 
@@ -20,7 +20,8 @@ class CellButton(QPushButton):
 
     def set_number(self, value):
         if value > MAX_COLORS:
-            raise ValueError(f'Not supported count color more than {MAX_COLORS}')
+            raise ValueError(f'Not supported count '
+                             f'color more than {MAX_COLORS}')
         self.setText(str(value) if value > 0 else "0")
         self.setStyleSheet(
             f'QPushButton {{ background-color: {Color(value).name};}}')
@@ -45,18 +46,20 @@ class TriangleBoard(QWidget):
     def init_ui(self):
         vbox = QVBoxLayout(self)
         vbox.setAlignment(Qt.AlignCenter)
-        for i, level in enumerate(self.field):
+
+        for i, row in enumerate(self.field):
             hbox = QHBoxLayout(self)
             hbox.setAlignment(Qt.AlignCenter)
-            for j, number in enumerate(level):
+
+            for j, number in enumerate(row):
                 cell = CellButton((i, j), self)
                 cell.set_number(number)
                 cell.setFixedSize(self.cell_length, self.cell_length)
                 cell.on_mouse_click = functools.partial(self.cell_click, cell)
                 self.cells.append(cell)
                 hbox.addWidget(cell, 0, Qt.AlignCenter)
-            vbox.addLayout(hbox)
 
+            vbox.addLayout(hbox)
         self.setLayout(vbox)
 
     def cell_click(self, cell):
@@ -82,10 +85,9 @@ class GameBoard(TriangleBoard):
         super().__init__(field, parent)
         self.field = TriangleLink(field)
         self.targets = self.field.get_targets()['vertices']
-        self.solutions = [
-            TriangleField(make_field_from_solution(self.field, solution))
-            for solution in solve(self.field)
-        ]
+        self.solutions = [TriangleField(
+            get_field_from_solution(self.field, solution))
+            for solution in solve(self.field)]
         self.when_solved = lambda: None
 
         for cell in self.cells:
@@ -108,8 +110,8 @@ class GameBoard(TriangleBoard):
                 self.field[cell.position] = 0
 
     def set_field(self, field):
-        for i, level in enumerate(field):
-            for j, cell in enumerate(level):
+        for i, row in enumerate(field):
+            for j, cell in enumerate(row):
                 self.field[i, j] = cell
         for cell in self.cells:
             cell.set_number(self.field[cell.position])

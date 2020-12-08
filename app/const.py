@@ -8,3 +8,4 @@ TITLE = 'NumberLink'
 SIZE_MAIN_WINDOW = (800, 600)
 START_MAIN_WINDOW = (10, 110)
 NAME_SAVE_FILE = 'field_save.txt'
+SEPARATORS = {'.', ' ', '\n'}
