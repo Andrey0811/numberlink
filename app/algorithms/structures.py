@@ -1,5 +1,8 @@
+from typing import List, Dict
+
+
 class Segment:
-    def __init__(self, iterable):
+    def __init__(self, iterable: list):
         self.active = set(iterable)
         self.thrown = set()
 
@@ -12,9 +15,11 @@ class Node:
     link_zero = None
     link_one = None
 
-    def __init__(self, edge, neighbor, name):
+    def __init__(self, edge: List[tuple],
+                 neighbors: Dict[tuple, tuple],
+                 name: int):
         self.edge = edge
-        self.neighbor = neighbor
+        self.neighbor = neighbors
         self.name = name
         self.zero_child = None
         self.one_child = None

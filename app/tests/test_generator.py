@@ -22,7 +22,7 @@ class PathConstructorTest(unittest.TestCase):
 
     def assert_count_added_neighbours(self, expected, position):
         constructor = PathConstructor(self.field)
-        actual = constructor.count_added_neighbours_or_non_valid(position)
+        actual = constructor.count_busy_neighbours(position)
         self.assertEqual(expected, actual)
 
     def test_count_numbered_neighbours_when_all_empty(self):

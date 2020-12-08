@@ -5,7 +5,7 @@ from typing import List
 
 from graph_tools import Graph
 
-CELL_EMPTY = 0
+CELL_EMPTY_VALUE = 0
 MAX_NUMBER = 100
 
 
@@ -53,7 +53,7 @@ class TriangleField:
 
     @property
     def field(self) -> List[List]:
-        return self.field
+        return self._field
 
     @staticmethod
     def _check_hexagonal(field):
@@ -114,7 +114,7 @@ class TriangleLink(TriangleField):
 
         for i, level in enumerate(self._field):
             for j, cell in enumerate(level):
-                if cell is not CELL_EMPTY:
+                if cell is not CELL_EMPTY_VALUE:
                     if cell in pairs:
                         targets["pairs"].add(frozenset((pairs[cell], (i, j))))
                     else:
@@ -135,7 +135,7 @@ class TriangleLink(TriangleField):
     @staticmethod
     def _check_pairs(field):
         items = collections.Counter(map(str, itertools.chain(*field)))
-        del items[str(CELL_EMPTY)]
+        del items[str(CELL_EMPTY_VALUE)]
         if not items:
             raise ValueError("Не обнаружено пар чисел.")
         filtered = [number for number, repeat in items.items() if repeat != 2]
@@ -152,7 +152,7 @@ class TriangleLink(TriangleField):
                     f"Числа не могут превышать: {MAX_NUMBER}."
                     f" Было получено: {number}"
                 )
-            if number < CELL_EMPTY:
+            if number < CELL_EMPTY_VALUE:
                 raise ValueError(
                     f"Числа не могут быть отрицательными."
                     f" Было получено: {number}"
