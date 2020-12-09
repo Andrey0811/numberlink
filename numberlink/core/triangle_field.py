@@ -29,6 +29,13 @@ class TriangleField:
                     return False
         return True
 
+    def __str__(self):
+        size = len(self._field)
+        output_str = [(' ' * (size - i - 1))
+                      + ''.join(map(str, self._field[i]))
+                      for i in range(len(self._field))]
+        return '\n'.join(map(str, output_str))
+
     def get_environment(self, row, col):
         directions = []
 
@@ -94,9 +101,6 @@ class TriangleField:
                 or (len(field) > 0 and not isinstance(field[0], list))):
             raise ValueError('Incorrect field')
 
-        # if len(field) <= 2:
-        #     raise ValueError('Incorrect field')
-
         if len(field[0]) != 1:
             field = list(reversed(field))
 
@@ -106,3 +110,9 @@ class TriangleField:
 
             if len(i) != start:
                 raise ValueError('Incorrect field')
+
+    def __hash__(self):
+        result = ()
+        for i in self._field:
+            result = (result, tuple(i))
+        return result.__hash__()

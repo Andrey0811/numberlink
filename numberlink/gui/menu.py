@@ -2,8 +2,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QPushButton, \
     QLabel, QLineEdit, QVBoxLayout
 
-from app import reader
-from app.const import DEFAULT_FIELD_HEIGHT
+from numberlink.const import DEFAULT_FIELD_HEIGHT
 
 
 class Menu(QWidget):
@@ -16,7 +15,7 @@ class Menu(QWidget):
         load_game_btn.clicked.connect(self.window().load_game_from_file)
 
         exit_btn = QPushButton('Выход', self)
-        exit_btn.clicked.connect(self.window().exit)
+        exit_btn.clicked.connect(self.window().close)
 
         size_label = QLabel('Размер доски', self)
         self.size_editor = QLineEdit(str(DEFAULT_FIELD_HEIGHT), self)
@@ -27,7 +26,7 @@ class Menu(QWidget):
         vbox = QVBoxLayout(self)
         vbox.setAlignment(Qt.AlignCenter)
 
-        if reader.exist_save_field():
+        if self.parent().reader.exist_save_field():
             continue_game_button = QPushButton('Продолжить игру', self)
             continue_game_button.clicked.connect(
                 self.window().load_game_from_save)

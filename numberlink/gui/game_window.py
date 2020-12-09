@@ -2,11 +2,11 @@ import random
 from typing import List
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMessageBox, QPushButton, QHBoxLayout, \
+from PyQt5.QtWidgets import QPushButton, QHBoxLayout, \
     QVBoxLayout, QLabel, QDialog, QLineEdit, QWidget
 
-from app.const import TITLE
-from app.gui.triangle_board import TriangleBoard
+from numberlink.const import TITLE, SIZE_DIALOG_WINDOW
+from numberlink.gui.triangle_board import TriangleBoard
 
 
 class GameWindow(QWidget):
@@ -20,7 +20,7 @@ class GameWindow(QWidget):
         solve_btn.clicked.connect(self.solve)
 
         menu_btn = QPushButton('Меню', self)
-        menu_btn.clicked.connect(self.window().menu)
+        menu_btn.clicked.connect(self.window().go_to_menu)
 
         clear_btn = QPushButton('Очистить', self)
         clear_btn.clicked.connect(self.clear)
@@ -29,7 +29,7 @@ class GameWindow(QWidget):
                                    f'{str(self.board.current_number)}', self)
         self.number_editor = QLineEdit(str(self.board.current_number), self)
         number_btn = QPushButton('Ввод', self)
-        number_btn.clicked.connect(self.window().click_number_change)
+        number_btn.clicked.connect(self.click_number_change)
 
         hbox = QHBoxLayout()
         hbox.setAlignment(Qt.AlignCenter)
@@ -45,46 +45,43 @@ class GameWindow(QWidget):
         vbox.addWidget(self.board, 0, Qt.AlignCenter)
         vbox.addLayout(hbox)
 
-        self.board.when_solved = self.show_finish_dialog
+        self.board.when_solved = self.show_dialog_message
 
-    def show_finish_dialog(self):
-        msb = QDialog(self)
-        msb.resize(100, 100)
-        msb.setWindowTitle(TITLE)
-        msb.show()
+    def show_dialog_message(self, message):
+        msg = QDialog(self)
+        msg.resize(*SIZE_DIALOG_WINDOW)
+        msg.setWindowTitle(TITLE)
 
-        text = QLabel()
-        text.setText('Вы решили задачу')
+        text = QLabel(msg)
+        text.setText(message)
 
-        return_btn = QPushButton('Вернуться', msb)
-        return_btn.clicked.connect(msb.close)
-
-        menu_btn = QPushButton('Меню', msb)
-        menu_btn.clicked.connect(self.window().menu)
-        menu_btn.clicked.connect(msb.close)
-
-        hbox = QHBoxLayout(self)
-        hbox.addWidget(return_btn, 0, Qt.AlignCenter)
-        hbox.addWidget(menu_btn, 0, Qt.AlignCenter)
-
-        vbox = QVBoxLayout(msb)
-        vbox.addWidget(text, 0, Qt.AlignCenter)
-        vbox.addLayout(hbox)
+        hbox = QHBoxLayout(msg)
+        hbox.addWidget(text, 0, Qt.AlignCenter)
+        msg.show()
 
     def solve(self):
         if not self.board.solutions:
-            self.show_no_solutions()
+            self.show_dialog_message('Решений нет')
         else:
             index = random.randint(0, len(self.board.solutions) - 1)
-            self.board.set_field(self.board.solutions[index].field)
-
-    @staticmethod
-    def show_no_solutions():
-        msg = QMessageBox()
-        msg.setWindowTitle(TITLE)
-        msg.setIcon(QMessageBox.Information)
-        msg.setText('К сожалению, решений нет')
-        msg.show()
+            self.board.field = self.board.solutions[index].field
 
     def clear(self):
         self.board.clear()
+
+    def click_number_change(self):
+        text = self.number_editor.text()
+        try:
+            self.board.current_number = int(text)
+            self.number_editor.setText(str(
+                self.board.current_number))
+            self.set_text_label(self.game.number_label,
+                                f'Текущее число: '
+                                f'{str(self.game.board.current_number)}')
+        except Exception as e:
+            print(e.args)
+
+    @staticmethod
+    def set_text_label(label, text):
+        label.setText(text)
+        label.adjustSize()

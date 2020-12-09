@@ -2,13 +2,14 @@ import unittest
 
 from graph_tools import Graph
 
-from app.core import solver
-from app.core.structures import Node
-from app.core.triangle_field import TriangleField
+from numberlink.core import solver
+from numberlink.core.structures import Node
+from numberlink.core.triangle_field import TriangleField
 
 
 class SolverTest(unittest.TestCase):
     def setUp(self):
+        self.test_solver = solver.Solver()
         self.field1 = TriangleField([[1],
                                      [1, 0, 2],
                                      [3, 0, 3, 0, 2]])
@@ -62,25 +63,21 @@ class SolverTest(unittest.TestCase):
             main_path=list('bd'))
 
     def method_tester(self, expected, parent_node, main_path):
-        actual = solver.update_main_path(
-            solver.update_neighbors(parent_node), main_path)
+        actual = self.test_solver.update_main_path(
+            self.test_solver.update_neighbors(parent_node), main_path)
         self.assertDictEqual(expected, actual)
 
     def test_solve(self):
         expected = [[(0, 0), (1, 1)], [(1, 0), (1, 1)],
                     [(1, 2), (2, 3)], [(2, 0), (2, 1)],
                     [(2, 1), (2, 2)], [(2, 3), (2, 4)]]
-        actual = list(solver.solve(self.field1))
-        self.assertTrue(len(actual) == 64)
+        actual = list(self.test_solver.solve(self.field1))
+        assert len(actual) == 64
         self.assertListEqual(expected, actual[0])
 
         expected = []
-        actual = list(solver.solve(self.field2))
+        actual = list(self.test_solver.solve(self.field2))
         self.assertListEqual(expected, actual)
 
-        actual = list(solver.solve(self.field3))
+        actual = list(self.test_solver.solve(self.field3))
         self.assertListEqual(expected, actual)
-
-
-if __name__ == '__main__':
-    unittest.main()

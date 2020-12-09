@@ -1,10 +1,10 @@
 import random
 from typing import List, Tuple
 
-from app.const import COUNT_NEIGHBORS
-from app.core import generator
-from app.core.structures import Path
-from app.core.triangle_field import TriangleField, MAX_NUMBER, CELL_EMPTY_VALUE
+from numberlink.const import COUNT_NEIGHBORS
+from numberlink.core import generator
+from numberlink.core.structures import Path
+from numberlink.core.triangle_field import TriangleField, MAX_NUMBER, CELL_EMPTY_VALUE
 
 
 class CreatorPath:
@@ -89,7 +89,7 @@ class CreatorPath:
                 return
 
     def get_gaming_field(self) -> List[List]:
-        field = generator.generate_triangle_field(self.field.size)
+        field = generator.Generator.generate_triangle_field(self.field.size)
         for i, path in enumerate(self.paths):
             for row, col in [path.start, path.end]:
                 field[row][col] = i + 1
@@ -106,7 +106,7 @@ class CreatorPath:
                   and self.number <= MAX_NUMBER):
                 return self.get_gaming_field()
             else:
-                field = generator.generate_triangle_field(self.field.size)
+                field = generator.Generator.generate_triangle_field(self.field.size)
                 self.__init__(TriangleField(field))
 
     @staticmethod

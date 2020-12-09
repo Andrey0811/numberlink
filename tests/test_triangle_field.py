@@ -1,16 +1,14 @@
 import unittest
 
-from graph_tools import Graph
-
-from app.core.triangle_field import TriangleField
+from numberlink.core.triangle_field import TriangleField
 
 
 class TriangleFieldTest(unittest.TestCase):
     def setUp(self):
         self.field = TriangleField([[1],
-                      [1, 0, 2],
-                      [1, 0, 3, 0, 2],
-                      [3, 0, 0, 0, 4, 0, 4]])
+                                    [1, 0, 2],
+                                    [1, 0, 3, 0, 2],
+                                    [3, 0, 0, 0, 4, 0, 4]])
         self.simple_field = TriangleField([[1],
                                            [1, 0, 2],
                                            [3, 0, 3, 0, 2]])
@@ -36,8 +34,8 @@ class TriangleFieldTest(unittest.TestCase):
         self.assertSetEqual(expected, actual)
 
     def test_check_field_when_ok(self):
-        self.assertEqual(self.field.field,
-                         TriangleField(self.field.field).field)
+        assert (self.field.field ==
+                TriangleField(self.field.field).field)
 
     def test_init_when_wrong(self):
         field = [[0, 0],
@@ -48,9 +46,9 @@ class TriangleFieldTest(unittest.TestCase):
         self.assertRaises(ValueError, TriangleField, None)
 
     def test_index_checker(self):
-        self.assertFalse(self.field.is_valid(0, 1))
-        self.assertFalse(self.field.is_valid(5, 0))
-        self.assertFalse(self.field.is_valid(0, 3))
+        assert not self.field.is_valid(0, 1)
+        assert not self.field.is_valid(5, 0)
+        assert not self.field.is_valid(0, 3)
 
     def test_get_targets(self):
         expected = dict(vertices={(0, 0), (1, 0),
@@ -62,7 +60,3 @@ class TriangleFieldTest(unittest.TestCase):
         actual = self.simple_field.get_targets()
 
         self.assertDictEqual(expected, actual)
-
-
-if __name__ == '__main__':
-    unittest.main()
