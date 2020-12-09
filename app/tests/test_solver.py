@@ -1,129 +1,86 @@
-from app.core.triangle_field import TriangleLink
-from graph_tools import Graph
 import unittest
+
+from graph_tools import Graph
+
+from app.core import solver
+from app.core.structures import Node
+from app.core.triangle_field import TriangleField
 
 
 class SolverTest(unittest.TestCase):
     def setUp(self):
-        self.instance_one_solution = TriangleLink([
-            [1, 0],      # 1 0
-            [0, 2, 1],  # 0 2 1
-            [0, 2]       # 0 2
-        ])
-        self.instance_many_solutions = TriangleLink([
-            [1, 2],      # 1 2
-            [0, 0, 0],  # 0 0 0
-            [1, 2],      # 1 2
-        ])
-        self.instance_no_solutions = TriangleLink([
-            [1, 2],      # 1 2
-            [0, 0, 0],  # 0 0 0
-            [2, 1]       # 2 1
-        ])
+        self.field1 = TriangleField([[1],
+                                     [1, 0, 2],
+                                     [3, 0, 3, 0, 2]])
+        self.field2 = TriangleField([[1],
+                                     [1, 0, 2],
+                                     [1, 0, 3, 0, 2],
+                                     [3, 0, 0, 0, 4, 0, 4]])
+        self.field3 = TriangleField([[1],
+                                     [1, 0, 2]])
 
         self.graph = Graph(directed=False)
-        self.graph.add_edge("p", "q")  # e_1
-        self.graph.add_edge("p", "r")  # e_2
-        self.graph.add_edge("r", "q")  # e_3
-        self.graph.add_edge("q", "s")  # e_4
+        self.graph.add_edge('a', 'b')
+        self.graph.add_edge('a', 'c')
+        self.graph.add_edge('c', 'b')
+        self.graph.add_edge('b', 'd')
 
-    def test_update_mate(self):
-        self.update_mate_tester(
-            expected={
-                "p": "q",
-                "q": "p",
-                "r": "r",
-                "s": "s"
-            },
+    def test_update_neighbors(self):
+        self.method_tester(
+            expected={'a': 'b',
+                      'b': 'a',
+                      'c': 'c',
+                      'd': 'd'},
             parent_node=Node(
                 self.graph.edges()[0],
                 {v: v for v in self.graph.vertices()},
                 1),
-            domain=list("pqrs")
-        )
+            main_path=list('abcd'))
 
-        self.update_mate_tester(
-            expected={
-                "q": "r",
-                "r": "q",
-                "s": "s"
-            },
+        self.method_tester(
+            expected={'b': 'c',
+                      'c': 'b',
+                      'd': 'd'},
             parent_node=Node(
                 self.graph.edges()[1],
-                {
-                    "p": "q",
-                    "q": "p",
-                    "r": "r",
-                    "s": "s"
-                },
+                {'a': 'b',
+                 'b': 'a',
+                 'c': 'c',
+                 'd': 'd'},
                 1),
-            domain=list("qrs")
-        )
+            main_path=list('bcd'))
 
-        self.update_mate_tester(
-            expected={
-                "q": 0,
-                "s": "s"
-            },
+        self.method_tester(
+            expected={'b': 0,
+                      'd': 'd'},
             parent_node=Node(
                 self.graph.edges()[2],
-                {
-                    "q": "p",
-                    "r": "r",
-                    "s": "s"
-                },
+                {'b': 'a',
+                 'c': 'c',
+                 'd': 'd'},
                 1),
-            domain=list("qs")
-        )
+            main_path=list('bd'))
 
-    def update_mate_tester(self, expected, parent_node, domain):
-        actual = update_domain(update_mate(parent_node), domain)
+    def method_tester(self, expected, parent_node, main_path):
+        actual = solver.update_main_path(
+            solver.update_neighbors(parent_node), main_path)
         self.assertDictEqual(expected, actual)
 
-    def test_solve_one_solution(self):
-        expected = [
-            [(0, 0), (0, 1)],
-            [(0, 1), (1, 2)],
-            [(1, 0), (1, 1)],
-            [(1, 0), (2, 0)],
-            [(2, 0), (2, 1)]
-        ]
-        actual = list(solve(self.instance_one_solution))
-        self.assertTrue(len(actual) == 1)
+    def test_solve(self):
+        expected = [[(0, 0), (1, 1)], [(1, 0), (1, 1)],
+                    [(1, 2), (2, 3)], [(2, 0), (2, 1)],
+                    [(2, 1), (2, 2)], [(2, 3), (2, 4)]]
+        actual = list(solver.solve(self.field1))
+        self.assertTrue(len(actual) == 64)
         self.assertListEqual(expected, actual[0])
 
-    def test_solve_many_solutions(self):
-        expected = [
-            [[(0, 0), (1, 0)],
-             [(0, 1), (1, 1)],
-             [(1, 0), (2, 0)],
-             [(1, 1), (1, 2)],
-             [(1, 2), (2, 1)]],
-            [[(0, 0), (1, 0)],
-             [(0, 1), (1, 2)],
-             [(1, 0), (2, 0)],
-             [(1, 1), (1, 2)],
-             [(1, 1), (2, 1)]],
-            [[(0, 0), (1, 0)],
-             [(0, 1), (1, 2)],
-             [(1, 0), (1, 1)],
-             [(1, 1), (2, 0)],
-             [(1, 2), (2, 1)]],
-            [[(0, 0), (1, 1)],
-             [(0, 1), (1, 2)],
-             [(1, 0), (1, 1)],
-             [(1, 0), (2, 0)],
-             [(1, 2), (2, 1)]]
-        ]
-        actual = list(solve(self.instance_many_solutions))
-
-        self.assertListEqual(expected, actual)
-
-    def test_solve_no_solutions(self):
         expected = []
-        actual = list(solve(self.instance_no_solutions))
+        actual = list(solver.solve(self.field2))
+        self.assertListEqual(expected, actual)
+
+        actual = list(solver.solve(self.field3))
         self.assertListEqual(expected, actual)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

@@ -8,45 +8,45 @@ MAX_NUMBER = 100
 
 class TriangleField:
     def __init__(self, field):
-        # self._check_hexagonal(field)
-        self._field = [list(map(int, level)) for level in field]
+        self.check_field(field)
+        self._field = [list(map(int, row)) for row in field]
 
     def __setitem__(self, key, value):
-        level, index = key
-        self._field[level][index] = value
+        row, col = key
+        self._field[row][col] = value
 
     def __getitem__(self, key):
-        level, index = key
-        return self._field[level][index]
+        row, col = key
+        return self._field[row][col]
 
     def __iter__(self):
         yield from self._field
 
     def __eq__(self, other):
-        for i, level in enumerate(self._field):
-            for j, cell in enumerate(level):
+        for i, row in enumerate(self._field):
+            for j, cell in enumerate(row):
                 if other[i, j] != self[i, j]:
                     return False
         return True
 
-    def get_environment(self, level, idx):
+    def get_environment(self, row, col):
         directions = []
 
-        if level > 0 and idx % 2 != 0:
+        if row > 0 and col % 2 != 0:
             directions.append((-1, -1))
-        elif level + 1 < self.size and idx % 2 == 0:
+        elif row + 1 < self.size and col % 2 == 0:
             directions.append((1, 1))
-        if idx > 0:
+        if col > 0:
             directions.append((0, -1))
-        if idx + 1 < len(self._field[level]):
+        if col + 1 < len(self._field[row]):
             directions.append((0, 1))
 
         for dy, dx in directions:
-            yield level + dy, idx + dx
+            yield row + dy, col + dx
 
-    def get_neighbours(self, level, index):
-        yield from (position for position in self.get_environment(level, index)
-                    if self.is_valid(*position))
+    def get_neighbours(self, row, col):
+        yield from (pos for pos in self.get_environment(row, col)
+                    if self.is_valid(*pos))
 
     @property
     def field(self) -> List[List]:
@@ -87,3 +87,22 @@ class TriangleField:
                     targets["vertices"].add((i, j))
 
         return targets
+
+    @staticmethod
+    def check_field(field: List[List]):
+        if (not isinstance(field, list)
+                or (len(field) > 0 and not isinstance(field[0], list))):
+            raise ValueError('Incorrect field')
+
+        # if len(field) <= 2:
+        #     raise ValueError('Incorrect field')
+
+        if len(field[0]) != 1:
+            field = list(reversed(field))
+
+        start = 1
+        for i in field[1:]:
+            start += 2
+
+            if len(i) != start:
+                raise ValueError('Incorrect field')
