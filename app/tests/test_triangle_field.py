@@ -45,7 +45,6 @@ class TriangleFieldTest(unittest.TestCase):
                  [0, 0, 0, 0, 0, 0]]
 
         self.assertRaises(ValueError, TriangleField, field)
-        self.assertRaises(ValueError, TriangleField, [])
         self.assertRaises(ValueError, TriangleField, None)
 
     def test_index_checker(self):
