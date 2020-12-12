@@ -16,6 +16,7 @@ class TriangleBoard(QWidget):
         self._field = TriangleField(field)
         self.board_size = self._field.size
         self.cells = []
+        self.right_cell = 0
         self.cell_length = 50
         self.init_ui()
         self._current_number = 1
@@ -28,6 +29,7 @@ class TriangleBoard(QWidget):
         for cell in self.cells:
             if cell.position in self.targets:
                 cell.is_static = True
+                self.right_cell += 1
 
     def init_ui(self):
         vbox = QVBoxLayout(self)
@@ -55,6 +57,14 @@ class TriangleBoard(QWidget):
 
     def cell_click(self, cell):
         if cell.position not in self.targets:
+            condition = any(cell.number == path[cell.position]
+                            for path in self.solutions)
+            if condition and self._field[cell.position] != cell.number:
+                self.right_cell += 1
+            elif any(self._field[cell.position] == path[cell.position]
+                     for path in self.solutions) and not condition:
+                self.right_cell -= 1
+
             self._field[cell.position] = cell.number
             if self.check_solution():
                 self.when_solved('Головоломка решена!')
@@ -66,7 +76,7 @@ class TriangleBoard(QWidget):
                 self._field[cell.position] = 0
 
     def check_solution(self):
-        return any(self._field == solution for solution in self.solutions)
+        return self.right_cell == self._field.count_cells
 
     @property
     def field(self):

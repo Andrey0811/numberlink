@@ -1,16 +1,17 @@
-from typing import List, Dict
+from dataclasses import dataclass, field
+from typing import List, Dict, Optional
 
 
+@dataclass
 class Path:
-    def __init__(self, start: tuple = None, end: tuple = None):
-        self.start = start
-        self.end = end
+    start: Optional[tuple]
+    end: Optional[tuple]
 
 
+@dataclass
 class Segment:
-    def __init__(self, iterable: list):
-        self.active = set(iterable)
-        self.passive = set()
+    active: set
+    passive: set = field(default_factory=set)
 
     def leave(self, item):
         self.active.remove(item)

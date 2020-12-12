@@ -22,17 +22,10 @@ class TriangleField:
     def __iter__(self):
         yield from self._field
 
-    def __eq__(self, other):
-        for i, row in enumerate(self._field):
-            for j, cell in enumerate(row):
-                if other[i, j] != self[i, j]:
-                    return False
-        return True
-
     def __str__(self):
         size = len(self._field)
-        output_str = [(' ' * (size - i - 1))
-                      + ''.join(map(str, self._field[i]))
+        output_str = [(' ' * (size - i - 1)) +
+                      ''.join(map(str, self._field[i]))
                       for i in range(len(self._field))]
         return '\n'.join(map(str, output_str))
 
@@ -64,10 +57,10 @@ class TriangleField:
         return len(self._field)
 
     def is_valid(self, level, key):
-        return (0 <= level < len(self._field)
-                and 0 <= key < len(self._field[level]))
+        return (0 <= level < len(self._field) and
+                0 <= key < len(self._field[level]))
 
-    def make_graph(self):
+    def create_graph(self):
         graph = Graph(directed=False, multiedged=False)
 
         for i, level in enumerate(self._field):
@@ -88,17 +81,17 @@ class TriangleField:
             for j, cell in enumerate(row):
                 if cell is not CELL_EMPTY_VALUE:
                     if cell in pairs:
-                        targets["pairs"].add(frozenset((pairs[cell], (i, j))))
+                        targets['pairs'].add(frozenset((pairs[cell], (i, j))))
                     else:
                         pairs[cell] = (i, j)
-                    targets["vertices"].add((i, j))
+                    targets['vertices'].add((i, j))
 
         return targets
 
     @staticmethod
     def check_field(field: List[List]):
-        if (not isinstance(field, list)
-                or (len(field) > 0 and not isinstance(field[0], list))):
+        if (not isinstance(field, list) or
+                (len(field) > 0 and not isinstance(field[0], list))):
             raise ValueError('Incorrect field')
 
         if len(field[0]) != 1:
@@ -116,3 +109,11 @@ class TriangleField:
         for i in self._field:
             result = (result, tuple(i))
         return result.__hash__()
+
+    @property
+    def count_cells(self) -> int:
+        count_cells = 0
+        for i in range(len(self._field)):
+            count_cells += i * 2 + 1
+
+        return count_cells

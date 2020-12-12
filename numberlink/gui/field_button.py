@@ -4,7 +4,9 @@ from numberlink.colors import MAX_COLORS, Color
 
 
 class FieldButton(QPushButton):
-    def __init__(self, position, parent, width, height):
+    def __init__(self, position: tuple,
+                 parent,
+                 width: int, height: int):
         super().__init__('0', parent)
         self.position = position
         self.number = 0
@@ -45,7 +47,8 @@ class FieldButton(QPushButton):
         if self._is_static:
             game_window = self.parent().parent()
             game_window.number_editor.setText(str(self.number))
-            game_window.set_text_label(game_window.number_label, str(self.number))
+            game_window.set_text_label(
+                game_window.number_label, str(self.number))
             self.parent().current_number = self.number
         else:
             self.number = self.parent().current_number % MAX_COLORS

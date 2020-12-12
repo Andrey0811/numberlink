@@ -35,7 +35,7 @@ class Solver:
                 self.create_solutions(root.second, path + [root.edge]))
 
     def solve(self, instance: TriangleField):
-        graph = instance.make_graph()
+        graph = instance.create_graph()
         targets = instance.get_targets()
         vertices = Segment(graph.vertices())
         edges = graph.edges()
@@ -61,7 +61,8 @@ class Solver:
                 if self.is_first_inconsistent(node, targets, vertices):
                     links.append(Node.first_second)
                 else:
-                    new_neighbor = self.update_main_path(node.neighbor, vertices.active)
+                    new_neighbor = self.update_main_path(
+                        node.neighbor, vertices.active)
                     links.append(get_node(next_edge, new_neighbor, 0))
                 if self.is_second_inconsistent(node, targets, vertices):
                     links.append(Node.first_second)
@@ -83,9 +84,9 @@ class Solver:
         nodes = (v for v in node.edge if v not in vertices.active)
 
         def condition(v: tuple):
-            return (node.neighbor[v] == v
-                    or v not in targets['vertices']
-                    and node.neighbor[v] not in [0, v])
+            return (node.neighbor[v] == v or
+                    v not in targets['vertices'] and
+                    node.neighbor[v] not in [0, v])
 
         return any(condition(v) for v in nodes)
 
@@ -96,11 +97,11 @@ class Solver:
         pair = {node.neighbor[v] for v in node.edge}
 
         def condition(v: tuple) -> bool:
-            return (v in targets['vertices'] and node.neighbor[v] != v
-                    or node.neighbor[v] in [0, self.opposite(v, node.edge)])
+            return (v in targets['vertices'] and node.neighbor[v] != v or
+                    node.neighbor[v] in [0, self.opposite(v, node.edge)])
 
-        return (pair <= union and pair not in targets['pairs']
-                or any(condition(v) for v in node.edge))
+        return (pair <= union and pair not in targets['pairs'] or
+                any(condition(v) for v in node.edge))
 
     @staticmethod
     def is_link(node: Node) -> bool:

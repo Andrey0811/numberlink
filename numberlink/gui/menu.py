@@ -27,10 +27,10 @@ class Menu(QWidget):
         vbox.setAlignment(Qt.AlignCenter)
 
         if self.parent().reader.exist_save_field():
-            continue_game_button = QPushButton('Продолжить игру', self)
-            continue_game_button.clicked.connect(
+            continue_game_btn = QPushButton('Продолжить игру', self)
+            continue_game_btn.clicked.connect(
                 self.window().load_game_from_save)
-            vbox.addWidget(continue_game_button, 0, Qt.AlignCenter)
+            vbox.addWidget(continue_game_btn, 0, Qt.AlignCenter)
 
         vbox.addWidget(load_game_btn, 0, Qt.AlignCenter)
         vbox.addWidget(size_label, 0, Qt.AlignCenter)

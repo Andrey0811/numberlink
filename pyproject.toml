@@ -1,0 +1,12 @@
+[tool.coverage.run]
+source = ["numberlink"]
+omit = ["numberlink/gui/", "numberlink/__main__.py",
+"numberlink/colors.py", "numberlink/const.py",
+"/setup.py"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+skip_empty = true
+sort = "-Miss"
+fail_under = 75
