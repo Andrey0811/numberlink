@@ -2,14 +2,14 @@ import sys
 
 from PyQt5.QtWidgets import QApplication
 
-from numberlink.gui.main_windows import MainWindow
+from numberlink_puzzle.gui.main_windows import MainWindow
 
 import argparse
 
-from numberlink.core.solver import Solver
-from numberlink.core.triangle_field import TriangleField
-from numberlink.reader import Reader
-from numberlink.core import generator
+from numberlink_puzzle.core.solver import Solver
+from numberlink_puzzle.core.triangle_field import TriangleField
+from numberlink_puzzle.reader import Reader
+from numberlink_puzzle.core import generator
 
 
 def arg_parser():
@@ -17,11 +17,12 @@ def arg_parser():
                                                  'Console Solve or Generate')
     parser.add_argument('-g', '--generate',
                         type=int, nargs=1,
-                        help='Generate field triangle numberlink with size. '
+                        help='Generate field triangle '
+                             'numberlink puzzle with size. '
                              'Example: -g 4')
     parser.add_argument('-s', '--solve', type=str, nargs=1,
-                        help='Solve a given numberlink, '
-                             'which exist in numberlink directory. '
+                        help='Solve a given numberlink_puzzle, '
+                             'which exist in numberlink_puzzle directory. '
                              'Example: -s field1.txt')
     parser.add_argument('-o', '--output', type=str, nargs=1,
                         help='The output file for the generator or for '

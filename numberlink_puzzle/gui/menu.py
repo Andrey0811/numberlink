@@ -2,7 +2,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QPushButton, \
     QLabel, QLineEdit, QVBoxLayout
 
-from numberlink.const import DEFAULT_FIELD_HEIGHT
+from numberlink_puzzle.const import DEFAULT_FIELD_HEIGHT
 
 
 class Menu(QWidget):

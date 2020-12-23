@@ -1,6 +1,6 @@
 import unittest
 
-from numberlink.core.triangle_field import TriangleField
+from numberlink_puzzle.core.triangle_field import TriangleField
 
 
 class TriangleFieldTest(unittest.TestCase):

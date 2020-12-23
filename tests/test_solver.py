@@ -2,9 +2,9 @@ import unittest
 
 from graph_tools import Graph
 
-from numberlink.core import solver
-from numberlink.core.structures import Node
-from numberlink.core.triangle_field import TriangleField
+from numberlink_puzzle.core import solver
+from numberlink_puzzle.core.structures import Node
+from numberlink_puzzle.core.triangle_field import TriangleField
 
 
 class SolverTest(unittest.TestCase):

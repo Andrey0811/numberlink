@@ -5,8 +5,8 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QPushButton, QHBoxLayout, \
     QVBoxLayout, QLabel, QDialog, QLineEdit, QWidget
 
-from numberlink.const import TITLE, SIZE_DIALOG_WINDOW
-from numberlink.gui.triangle_board import TriangleBoard
+from numberlink_puzzle.const import TITLE, SIZE_DIALOG_WINDOW
+from numberlink_puzzle.gui.triangle_board import TriangleBoard
 
 
 class GameWindow(QWidget):

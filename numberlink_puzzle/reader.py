@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import List
 
-from numberlink.const import NAME_SAVE_FILE, SEPARATORS
+from numberlink_puzzle.const import NAME_SAVE_FILE, SEPARATORS
 
 
 class Reader:
@@ -41,8 +41,10 @@ class Reader:
 
         if len(result) == 0:
             result = list(path.glob(filename))
-            result += list(Path(str(path) + path.root + 'resources').glob(filename))
-            result += list(Path(str(path.parent) + path.root + 'resources').glob(filename))
+            result += list(Path(str(path) + path.root +
+                                'resources').glob(filename))
+            result += list(Path(str(path.parent) + path.root +
+                                'resources').glob(filename))
 
         if len(result) > 0:
             return str(result[0])
@@ -50,7 +52,7 @@ class Reader:
     @staticmethod
     def get_resources_path() -> str:
         path = Path.cwd()
-        if str(path).endswith('numberlink'):
+        if str(path).endswith('numberlink_puzzle'):
             path = path.parent
         return str(Path(str(str(path) + path.root + 'resources')))
 

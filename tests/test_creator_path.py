@@ -1,8 +1,8 @@
 import unittest
 
-from numberlink.core import generator
-from numberlink.core.generator import Generator
-from numberlink.core.triangle_field import TriangleField
+from numberlink_puzzle.core import generator
+from numberlink_puzzle.core.generator import Generator
+from numberlink_puzzle.core.triangle_field import TriangleField
 
 
 class CreatorPathTest(unittest.TestCase):

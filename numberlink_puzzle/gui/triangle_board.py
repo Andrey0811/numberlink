@@ -3,10 +3,10 @@ import functools
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout
 
-from numberlink.colors import MAX_COLORS
-from numberlink.core.solver import Solver
-from numberlink.gui.field_button import FieldButton
-from numberlink.core.triangle_field import TriangleField
+from numberlink_puzzle.colors import MAX_COLORS
+from numberlink_puzzle.core.solver import Solver
+from numberlink_puzzle.gui.field_button import FieldButton
+from numberlink_puzzle.core.triangle_field import TriangleField
 
 
 class TriangleBoard(QWidget):

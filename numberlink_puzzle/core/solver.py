@@ -1,9 +1,9 @@
 import itertools
 from typing import List, Dict
 
-from numberlink.core.generator import Generator
-from numberlink.core.structures import Node, Segment
-from numberlink.core.triangle_field import TriangleField
+from numberlink_puzzle.core.generator import Generator
+from numberlink_puzzle.core.structures import Node, Segment
+from numberlink_puzzle.core.triangle_field import TriangleField
 
 
 class Solver:

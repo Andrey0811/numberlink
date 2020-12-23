@@ -1,6 +1,6 @@
 import unittest
 
-from numberlink import reader
+from numberlink_puzzle import reader
 
 
 class ReaderTest(unittest.TestCase):

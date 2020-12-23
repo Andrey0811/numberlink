@@ -1,7 +1,7 @@
 import unittest
 
-from numberlink.core import triangle_field
-from numberlink.core import generator
+from numberlink_puzzle.core import triangle_field
+from numberlink_puzzle.core import generator
 
 
 class GeneratingTest(unittest.TestCase):

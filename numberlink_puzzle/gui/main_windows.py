@@ -3,12 +3,12 @@ import sys
 from PyQt5.QtWidgets import (QMainWindow,
                              QStackedWidget, QFileDialog)
 
-from numberlink.core.generator import Generator
-from numberlink.reader import Reader
-from numberlink.const import TITLE, \
+from numberlink_puzzle.core.generator import Generator
+from numberlink_puzzle.reader import Reader
+from numberlink_puzzle.const import TITLE, \
     START_MAIN_WINDOW, SIZE_MAIN_WINDOW
-from numberlink.gui.game_window import GameWindow
-from numberlink.gui.menu import Menu
+from numberlink_puzzle.gui.game_window import GameWindow
+from numberlink_puzzle.gui.menu import Menu
 
 
 class MainWindow(QMainWindow):

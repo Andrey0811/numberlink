@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field
-from typing import List, Dict, Optional
+from typing import List, Dict
 
 
-@dataclass
 class Path:
-    start: Optional[tuple]
-    end: Optional[tuple]
+    def __init__(self, start=None, end=None):
+        self.start = start
+        self.end = end
 
 
 @dataclass

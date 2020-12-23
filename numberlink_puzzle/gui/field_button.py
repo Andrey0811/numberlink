@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QPushButton
 
-from numberlink.colors import MAX_COLORS, Color
+from numberlink_puzzle.colors import MAX_COLORS, Color
 
 
 class FieldButton(QPushButton):

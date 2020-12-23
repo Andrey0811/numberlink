@@ -1,9 +1,9 @@
 import random
 from typing import List, Tuple
 
-from numberlink.const import COUNT_NEIGHBORS, DEFAULT_FIELD_HEIGHT
-from numberlink.core.structures import Path
-from numberlink.core.triangle_field import TriangleField, \
+from numberlink_puzzle.const import COUNT_NEIGHBORS, DEFAULT_FIELD_HEIGHT
+from numberlink_puzzle.core.structures import Path
+from numberlink_puzzle.core.triangle_field import TriangleField, \
     MAX_NUMBER, CELL_EMPTY_VALUE
 
 

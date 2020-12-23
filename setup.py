@@ -7,7 +7,7 @@ with open("requirements.txt") as f:
     requirements = [i.strip() for i in f]
 
 setuptools.setup(
-    name="numberlink",
+    name="numberlink_puzzle",
     version="1.0",
     author="Andrey Ozhigov",
     author_email="andreyozhigoff@yandex.ru",
